@@ -11,8 +11,9 @@ release:
   script:
     - apt-get update && apt-get install luarocks lua-penlight -y
     - luarocks install https://raw.githubusercontent.com/tarantool/LDoc/tarantool/ldoc-scm-2.rockspec
-    - bash update_submodules.sh
     - cmake .
+    - make pull-modules
+    - make build-modules
     - make json json-ru singlehtml-website singlehtml-ru-website pdf pdf-ru
     - bash upload_output.sh
   only:

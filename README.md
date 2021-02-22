@@ -4,54 +4,67 @@ Tarantool documentation source, published at https://www.tarantool.io/doc/.
 
 ## How to build Tarantool documentation using [Docker](https://www.docker.com)
 
-### Build docker image
+### Build the Docker image
+
 ```bash
 docker build -t tarantool-doc-builder .
 ```
 
-### Build Tarantool documentation using *tarantool-doc-builder* image
-## NOTE: 
-> Run this command only if you don't have untracked files!
-  check it by `git status` 
-  Also failures during git submodule update can be fixed by:
-   ```bash
-   git submodule deinit -f .
-   git submodule update --init
-   ```
+### Build Tarantool documentation in Docker
 
-Init and update submodules:
-```bash
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "./update_submodules.sh"
-```
-or do it manually:
-```bash
-git submodule init
-git submodule update
-git pull --recurse-submodules
-git submodule update --remote --merge
-```
+1.  First, update the submodules:
 
-Init make commands:
-```bash
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "cmake ."
-```
+    ```bash
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "./pull_submodules.sh"
+    ```
+    
+    You can also do without a Docker container:
+    
+    ```bash
+    git submodule update --init
+    git fetch --recurse-submodules
+    git submodule update --remote --checkout
+    ```
+   
+    **Caution:** Run this command only if you don't have untracked files!
+    Check it with `git status`.
+   
+    Failures during `git submodule update` can be fixed with:
 
-Run a required make command inside *tarantool-doc-builder* container:
-```bash
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make html"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make html-ru"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make singlehtml"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make singlehtml-ru"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make pdf"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make pdf-ru"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make json"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make json-ru"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make epub"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make epub-ru"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make update-pot"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make update-po"
-docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make update-po-force"
-```
+        ```bash
+        git submodule deinit -f .
+        git submodule update --init
+        ```
+
+2.  Now build the submodules content:
+
+    ```bash
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "./build_submodules.sh"
+    
+    ```
+    
+    Init `make` commands:
+    ```bash
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "cmake ."
+    ```
+
+3.  Run the required `make` command in a *tarantool-doc-builder* container:
+    
+    ```bash
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make html"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make html-ru"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make singlehtml"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make singlehtml-ru"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make pdf"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make pdf-ru"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make json"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make json-ru"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make epub"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make epub-ru"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make update-pot"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make update-po"
+    docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make update-po-force"
+    ```
 
 ### Run documentation locally on your machine
 using python3 built-in server:
