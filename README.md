@@ -56,16 +56,28 @@ docker run --rm -it -v $(pwd):/doc tarantool-doc-builder sh -c "make update-po-f
 ```
 
 ### Run documentation locally on your machine
+
+When editing the documentation, you can set up a live-reload server.
+It will build your documentation and serve it on [127.0.0.1:8000](http://127.0.0.1:8000).
+Every time you make changes in the source files, it will rebuild the docs
+and refresh the browser page.
+
+```bash
+docker run --rm -it -p 8000:8000 -v $(pwd):/doc tarantool-doc-builder sh -c "make autobuild"
+```
+
+If you prefer to build the docs manually with `make html`, serve them
 using python3 built-in server:
 ```bash
-cd output/html
-python3 -m http.server
+python3 -m http.server --directory output/html
 ```
+
 or python2 built-in server:
 ```bash
 cd output/html
 python -m SimpleHTTPServer
 ```
+
 then go to [localhost:8000](http://localhost:8000) in your browser.
 
 ## Localization
